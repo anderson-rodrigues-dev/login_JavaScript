@@ -1,4 +1,3 @@
-import {Cxmsg} from "./cxmsg.js";
 class Login{
     static mat = null;
     static pas = null;
@@ -11,9 +10,10 @@ class Login{
     static callback_naook = null;
     static config = null;
     
-    static login(config){
+    static login(callback_ok,callback_naook,config){
         this.config = config;
-
+        this.callback_ok = ()=>{callback_ok()};
+        this.callback_naook = ()=>{callback_naook()}
         this.estilocss = `
         .fundoLogin{
             display: flex;
@@ -209,29 +209,13 @@ class Login{
                 this.nomelogado = res.nome;
                 this.acessologado = res.acesso;
                 this.fechar();
-                Cxmsg.mostrar({
-                    cor: '#0f0',
-                    tipo: 'ok', // tipos: ok, sn;
-                    textos: ['OK','CANCELAR'],
-                    titulo: 'LOGIN',
-                    texto: `Login efetuado com sucesso!!`
-                })
+                this.callback_ok();
             } else{
                 this.logado = false;
                 this.matlogado = null;
                 this.nomelogado = null;
                 this.acessologado = null;
-                Cxmsg.mostrar({
-                    cor: '#f00',
-                    tipo: 'ok', // tipos: ok, sn;
-                    textos: ['OK','CANCELAR'],
-                    comando: ()=>{
-                        
-                    },
-                    titulo: 'ERRO',
-                    texto: `Login não efetuado!! <br>
-                    Username ou senha incorretos.`
-                })
+                this.callback_naook();
             };
         })
     }
